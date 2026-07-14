@@ -16,7 +16,7 @@
 
 #include <zmk/event_manager.h>
 #include <zmk/events/position_state_changed.h>
-#if (NOT CONFIG_ZMK_SPLIT) || CONFIG_ZMK_SPLIT_ROLE_CENTRAL
+#if !CONFIG_ZMK_SPLIT || CONFIG_ZMK_SPLIT_ROLE_CENTRAL
 #include <zmk/keymap.h>
 #endif
 #include <zmk/rgb_underglow.h>
@@ -29,12 +29,12 @@
 #define CAPS_LOCK_BIT HID_USAGE_LED_CAPS_LOCK
 #endif
 
-#if IS_ENABLED(CONFIG_ZMK_BLE) && ((NOT CONFIG_ZMK_SPLIT) || CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
+#if IS_ENABLED(CONFIG_ZMK_BLE) && (!CONFIG_ZMK_SPLIT || CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
 #include <zmk/ble.h>
 #include <zmk/events/ble_active_profile_changed.h>
 #endif
 
-#if (NOT CONFIG_ZMK_SPLIT) || CONFIG_ZMK_SPLIT_ROLE_CENTRAL
+#if !CONFIG_ZMK_SPLIT || CONFIG_ZMK_SPLIT_ROLE_CENTRAL
 #include <zmk/events/layer_state_changed.h>
 #endif
 
@@ -431,7 +431,7 @@ static int led_map_event_listener(const zmk_event_t *eh) {
         return ZMK_EV_EVENT_BUBBLE;
     }
 
-#if IS_ENABLED(CONFIG_ZMK_HID_INDICATORS) && ((NOT CONFIG_ZMK_SPLIT) || CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
+#if IS_ENABLED(CONFIG_ZMK_HID_INDICATORS) && (!CONFIG_ZMK_SPLIT || CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
     const struct zmk_hid_indicators_changed *ind_ev = as_zmk_hid_indicators_changed(eh);
     if (ind_ev != NULL) {
         indicator_cache.caps_lock = (ind_ev->indicators & CAPS_LOCK_BIT) != 0;
@@ -439,7 +439,7 @@ static int led_map_event_listener(const zmk_event_t *eh) {
     }
 #endif
 
-#if IS_ENABLED(CONFIG_ZMK_BLE) && ((NOT CONFIG_ZMK_SPLIT) || CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
+#if IS_ENABLED(CONFIG_ZMK_BLE) && (!CONFIG_ZMK_SPLIT || CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
     const struct zmk_ble_active_profile_changed *bt_ev = as_zmk_ble_active_profile_changed(eh);
     if (bt_ev != NULL) {
         indicator_cache.bt_profile_index = bt_ev->index;
@@ -448,7 +448,7 @@ static int led_map_event_listener(const zmk_event_t *eh) {
     }
 #endif
 
-#if (NOT CONFIG_ZMK_SPLIT) || CONFIG_ZMK_SPLIT_ROLE_CENTRAL
+#if !CONFIG_ZMK_SPLIT || CONFIG_ZMK_SPLIT_ROLE_CENTRAL
     const struct zmk_layer_state_changed *layer_ev = as_zmk_layer_state_changed(eh);
     if (layer_ev != NULL) {
         indicator_cache.active_layer = zmk_keymap_highest_layer_active();
@@ -462,15 +462,15 @@ static int led_map_event_listener(const zmk_event_t *eh) {
 ZMK_LISTENER(led_map, led_map_event_listener);
 ZMK_SUBSCRIPTION(led_map, zmk_position_state_changed);
 
-#if (NOT CONFIG_ZMK_SPLIT) || CONFIG_ZMK_SPLIT_ROLE_CENTRAL
+#if !CONFIG_ZMK_SPLIT || CONFIG_ZMK_SPLIT_ROLE_CENTRAL
 ZMK_SUBSCRIPTION(led_map, zmk_layer_state_changed);
 #endif
 
-#if IS_ENABLED(CONFIG_ZMK_HID_INDICATORS) && ((NOT CONFIG_ZMK_SPLIT) || CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
+#if IS_ENABLED(CONFIG_ZMK_HID_INDICATORS) && (!CONFIG_ZMK_SPLIT || CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
 ZMK_SUBSCRIPTION(led_map, zmk_hid_indicators_changed);
 #endif
 
-#if IS_ENABLED(CONFIG_ZMK_BLE) && ((NOT CONFIG_ZMK_SPLIT) || CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
+#if IS_ENABLED(CONFIG_ZMK_BLE) && (!CONFIG_ZMK_SPLIT || CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
 ZMK_SUBSCRIPTION(led_map, zmk_ble_active_profile_changed);
 #endif
 
@@ -609,16 +609,16 @@ static int led_map_init(void) {
     memset(key_states, 0, sizeof(key_states));
 
     /* Initialize indicator cache */
-#if (NOT CONFIG_ZMK_SPLIT) || CONFIG_ZMK_SPLIT_ROLE_CENTRAL
+#if !CONFIG_ZMK_SPLIT || CONFIG_ZMK_SPLIT_ROLE_CENTRAL
     indicator_cache.active_layer = zmk_keymap_highest_layer_active();
 #endif
 
-#if IS_ENABLED(CONFIG_ZMK_BLE) && ((NOT CONFIG_ZMK_SPLIT) || CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
+#if IS_ENABLED(CONFIG_ZMK_BLE) && (!CONFIG_ZMK_SPLIT || CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
     indicator_cache.bt_profile_index = zmk_ble_active_profile_index();
     indicator_cache.bt_connected = zmk_ble_active_profile_is_connected();
 #endif
 
-#if IS_ENABLED(CONFIG_ZMK_HID_INDICATORS) && ((NOT CONFIG_ZMK_SPLIT) || CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
+#if IS_ENABLED(CONFIG_ZMK_HID_INDICATORS) && (!CONFIG_ZMK_SPLIT || CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
     zmk_hid_indicators_t indicators = zmk_hid_indicators_get_current_profile();
     indicator_cache.caps_lock = (indicators & CAPS_LOCK_BIT) != 0;
 #endif
