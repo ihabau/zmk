@@ -49,7 +49,11 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
  * Zephyr 4.1 DTS bindings don't generate macros for type: array
  * properties in module bindings.
  */
+#if IS_ENABLED(CONFIG_ZMK_LED_MAP_CORNE)
+#include <corne_led_map.h>
+#else
 #include <hnkb40_led_map.h>
+#endif
 
 /* Indicator LED indices from DTS (int properties work fine) */
 #if DT_NODE_HAS_PROP(LED_MAP_NODE, caps_lock_led_index)

@@ -13,6 +13,12 @@ menuconfig ZMK_LED_MAP
 
 if ZMK_LED_MAP
 
+config ZMK_LED_MAP_CORNE
+    bool "Use Corne LED mapping (6 underglow + 21 per-key per side)"
+    default n
+    help
+      Use Corne-specific LED index mapping instead of HNKB40.
+
 config ZMK_LED_MAP_PER_KEY_BRT_MAX
     int "Per-key LED maximum brightness in percent"
     range 0 100
