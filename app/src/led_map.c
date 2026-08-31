@@ -55,6 +55,8 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
  */
 #if IS_ENABLED(CONFIG_ZMK_LED_MAP_CORNE)
 #include <corne_led_map.h>
+#elif IS_ENABLED(CONFIG_ZMK_LED_MAP_SOFLE)
+#include <sofle_led_map.h>
 #else
 #include <hnkb40_led_map.h>
 #endif
@@ -165,6 +167,7 @@ static inline uint8_t scale_brt(uint8_t brt, uint8_t max_pct) {
 
 /* --- Underglow rendering --- */
 
+#if UNDERGLOW_COUNT > 0
 static void render_underglow_leds(void) {
     struct zmk_rgb_underglow_render_state ug;
     if (zmk_rgb_underglow_get_render_state(&ug) != 0 || !ug.on) {
@@ -208,6 +211,7 @@ static void render_underglow_leds(void) {
 
     zmk_rgb_underglow_advance_animation();
 }
+#endif /* UNDERGLOW_COUNT > 0 */
 
 /* --- Per-key rendering --- */
 
@@ -401,7 +405,9 @@ static void render_indicator_leds(void) {
 static void led_map_tick(struct k_work *work) {
     memset(pixels, 0, sizeof(pixels));
 
+#if UNDERGLOW_COUNT > 0
     render_underglow_leds();
+#endif
     render_per_key_leds();
     render_indicator_leds();
 

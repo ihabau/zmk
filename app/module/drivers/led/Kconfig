@@ -19,6 +19,12 @@ config ZMK_LED_MAP_CORNE
     help
       Use Corne-specific LED index mapping instead of HNKB40.
 
+config ZMK_LED_MAP_SOFLE
+    bool "Use Sofle LED mapping (0 underglow + 29 per-key per side)"
+    default n
+    help
+      Use Sofle-specific LED index mapping (per-key only, no underglow).
+
 config ZMK_LED_MAP_PER_KEY_BRT_MAX
     int "Per-key LED maximum brightness in percent"
     range 0 100
